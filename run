@@ -1,0 +1,29 @@
+#!/bin/bash
+
+if [[ ! -f run_configuration ]]; then
+	echo "Create a file called \"run_configuration\" in the current directory."
+	echo "This file should contain at least the following line:"
+	echo ""
+	echo "SGESTYLE_LOCATION=\"../build/lib/sgestyle.so\""
+	exit -1
+fi
+
+source run_configuration
+
+if [[ "$SGESTYLE_LOCATION" == "" ]]; then
+	echo "Please set the SGESTYLE_LOCATION variable in the run_configuration file"
+	exit -2
+fi
+
+echo \
+clang++\
+	-cc1\
+	-load ${SGESTYLE_LOCATION}\
+	-plugin print-sge-style\
+	"$@"
+
+clang++\
+	-cc1\
+	-load ${SGESTYLE_LOCATION}\
+	-plugin print-sge-style\
+	"$@"
